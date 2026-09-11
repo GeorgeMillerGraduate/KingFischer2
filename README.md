@@ -1,6 +1,8 @@
 # KingFischer2 0.1.0
 
-A Java 17 command-line UCI chess engine, packaged as a NetBeans-compatible Maven project. No GUI is included. **KingFischer2** searches its own moves and does not invoke Stockfish at runtime.
+A Java 17 UCI chess engine written in Java and packaged as a NetBeans-oriented Maven project.
+
+KingFischer2 searches its own moves and does not invoke Stockfish at runtime.
 
 > **Release status:** A working first engine release, with a scalar port of the current Stockfish NNUE evaluator and an adapted selective search.
 >
@@ -10,35 +12,37 @@ A Java 17 command-line UCI chess engine, packaged as a NetBeans-compatible Maven
 
 ---
 
-## Start on Windows
+## Quick Start on Windows
 
-1. Extract the entire ZIP. Do not run files from inside the ZIP preview.
-2. Install or use a **64-bit Java 17 or newer** runtime.
-3. Double-click **`Open-KingFischer2.bat`** to open the engine in a command window.
+A prebuilt Windows executable is included:
 
-Alternatively, open Command Prompt inside the extracted `KingFischer2` directory and run:
-
-~~~bat
-java -Xmx768m -jar KingFischer2.jar
+~~~text
+run_chess_engine.exe
 ~~~
 
-Keep the **`networks`** folder beside the JAR.
+This is the simplest way to start KingFischer2 on Windows.
 
-It contains the trained NNUE weights, approximately **94 MiB**. The executable JAR is deliberately small: it contains the engine code while keeping the neural-network data separate to avoid duplicating it in the download.
+1. Download or clone the complete repository.
+2. Keep the project files and `networks` directory together.
+3. Double-click:
 
-### Java not on PATH?
-
-If `java` is not on your PATH, specify the Java executable directly:
-
-~~~bat
-"C:\Program Files\Java\jdk-17\bin\java.exe" -Xmx768m -jar KingFischer2.jar
+~~~text
+run_chess_engine.exe
 ~~~
 
----
+A Windows Command Prompt window will open and start the chess engine.
 
-## Basic UCI Usage
+You can also launch it manually from Command Prompt.
 
-After starting KingFischer2, enter commands one line at a time:
+Open Command Prompt in the KingFischer2 directory and enter:
+
+~~~bat
+run_chess_engine.exe
+~~~
+
+You can then communicate with the engine using standard UCI commands.
+
+For example:
 
 ~~~text
 uci
@@ -53,7 +57,7 @@ Wait for:
 bestmove ...
 ~~~
 
-The engine emits standard UCI search information:
+The engine emits standard UCI search information while searching:
 
 ~~~text
 info depth ... score ... nodes ... pv ...
@@ -61,10 +65,203 @@ info depth ... score ... nodes ... pv ...
 
 Move choices and scores depend on the position and search parameters, so this README does not promise a particular move.
 
-### Search for one second
+---
+
+## Windows Executable
+
+The supplied Windows executable is:
+
+~~~text
+run_chess_engine.exe
+~~~
+
+It provides a convenient way to run KingFischer2 from a normal Windows Command Prompt without opening the project in an IDE.
+
+The executable is intended for **64-bit Windows**.
+
+The underlying chess engine itself is written in Java.
+
+Keep the supplied `networks` directory with the engine files. It contains the trained NNUE network used by the evaluation system.
+
+The network is approximately **94 MiB**.
+
+---
+
+## Other Operating Systems
+
+A precompiled executable is currently provided **only for Windows**.
+
+There are currently no packaged macOS or Linux executables.
+
+Because the engine itself is written in Java, the source code can be compiled on other platforms using a suitable Java IDE or Maven environment.
+
+The project is primarily configured and tested using:
+
+- **NetBeans**
+- **Maven**
+- **Java 17**
+
+Users on Linux, macOS, or other Java-compatible platforms should compile the source code themselves.
+
+Although other Java IDEs should be capable of importing the Maven project, **NetBeans is the primary development environment for KingFischer2**.
+
+---
+
+## Open and Compile in NetBeans
+
+KingFischer2 is primarily designed as a **NetBeans Maven project**.
+
+### Requirements
+
+- NetBeans
+- JDK 17 or newer
+- Maven, or the Maven installation bundled with NetBeans
+
+### Opening the project
+
+1. Open **NetBeans**.
+2. Select **File → Open Project**.
+3. Select the **`KingFischer2`** directory containing `pom.xml`.
+4. Set the project Java platform to **JDK 17 or newer**.
+5. Select **Clean and Build**.
+6. Select **Run Project**.
+
+The supplied `nbactions.xml` configures the project for NetBeans.
+
+Because this is a Maven project, NetBeans recognises the project through:
+
+~~~text
+pom.xml
+~~~
+
+An old-style Ant `nbproject` directory is not required.
+
+Dependencies required for building and testing are downloaded by Maven.
+
+---
+
+## Compile from Source
+
+The project can also be compiled directly with Maven if Java and Maven are installed.
+
+From the KingFischer2 project directory:
+
+~~~bash
+mvn clean verify
+~~~
+
+The compiled JAR will be created under:
+
+~~~text
+target/
+~~~
+
+The engine can then be run using Java.
+
+For example:
+
+~~~bash
+java -Xmx768m -jar target/KingFischer2.jar
+~~~
+
+Run the engine from the project directory so that the NNUE network can be located.
+
+The exact JAR filename is determined by the Maven configuration in `pom.xml`.
+
+The Windows `run_chess_engine.exe` is provided for convenience; the Java source remains the underlying implementation.
+
+---
+
+## Basic UCI Usage
+
+KingFischer2 uses the **Universal Chess Interface (UCI)** protocol.
+
+After starting:
+
+~~~text
+run_chess_engine.exe
+~~~
+
+enter commands one line at a time.
+
+### Initialise UCI
+
+~~~text
+uci
+~~~
+
+The engine should eventually respond with:
+
+~~~text
+uciok
+~~~
+
+### Check readiness
+
+~~~text
+isready
+~~~
+
+The engine responds:
+
+~~~text
+readyok
+~~~
+
+### Set a position
+
+For the starting position:
+
+~~~text
+position startpos
+~~~
+
+With moves:
+
+~~~text
+position startpos moves e2e4 e7e5 g1f3
+~~~
+
+### Start a search
+
+For a fixed depth:
+
+~~~text
+go depth 6
+~~~
+
+The engine searches the position and eventually returns:
+
+~~~text
+bestmove ...
+~~~
+
+---
+
+## Search Examples
+
+### Search to depth 10
+
+~~~text
+go depth 10
+~~~
+
+### Search 100,000 nodes
+
+~~~text
+go nodes 100000
+~~~
+
+### Think for one second
 
 ~~~text
 go movetime 1000
+~~~
+
+### Think for five seconds
+
+~~~text
+go movetime 5000
 ~~~
 
 ### Continuous analysis
@@ -73,113 +270,35 @@ go movetime 1000
 go infinite
 ~~~
 
-Then enter:
+Stop continuous analysis with:
 
 ~~~text
 stop
 ~~~
 
-to return the best completed result.
-
-Enter:
+Exit KingFischer2 with:
 
 ~~~text
 quit
 ~~~
 
-to terminate the engine.
-
 The first search loads the NNUE network. Subsequent searches reuse it.
 
-A successful `bestmove` does **not** automatically update the internal game position. Send the next complete `position ... moves ...` command as a normal UCI chess GUI would.
+A successful `bestmove` does **not** automatically update the game position.
 
----
-
-## Launchers
-
-### `Open-KingFischer2.bat`
-
-Human-friendly Windows launcher intended for double-click use. It provides a greeting and pauses appropriately.
-
-### `run-engine.bat`
-
-Silent UCI protocol launcher intended for integration with chess GUIs and other applications.
-
-### `run-engine.sh`
-
-Linux/macOS launcher.
-
-The engine can also always be launched directly with:
-
-~~~bash
-java -Xmx768m -jar KingFischer2.jar
-~~~
-
----
-
-## Open in NetBeans
-
-1. Open **NetBeans**.
-2. Select **File → Open Project**.
-3. Select the extracted **`KingFischer2`** directory containing `pom.xml`.
-4. Set the project Java platform to **JDK 17 or newer**.
-5. Select **Clean and Build**.
-6. Select **Run Project**.
-
-The supplied `nbactions.xml` selects the main class and starts a separate Java process.
-
-Enter UCI commands through NetBeans' Output/Input console.
-
-If your NetBeans console does not provide interactive input, run:
+Send the next complete:
 
 ~~~text
-Open-KingFischer2.bat
+position ... moves ...
 ~~~
 
-instead. Both methods use the same engine.
-
-KingFischer2 is a standard **Maven project**. NetBeans recognises `pom.xml` directly, so an Ant `nbproject` directory is not required.
-
-Dependencies are downloaded during the first Maven build.
-
-The prebuilt JAR can run offline provided the included NNUE network is available.
-
----
-
-## Build and Test
-
-Command-line builds require a JDK and Maven on your PATH.
-
-NetBeans can alternatively use its bundled Maven installation.
-
-Build and run:
-
-~~~bash
-mvn clean verify
-java -Xmx768m -jar target/KingFischer2.jar
-~~~
-
-Run the second command from the project directory so that the NNUE network can be located.
-
-Alternatively, copy the newly built JAR beside the existing `networks/` directory.
-
-The supplied `build.bat` runs the tests and copies the newly built JAR over the root executable.
-
-### Runtime dependencies
-
-KingFischer2 has **no runtime Java dependencies**.
-
-JUnit and the Maven plugins are required only for building and testing.
-
-The project targets **Java 17 bytecode**.
-
-For a chess GUI launched from another working directory, use the root `KingFischer2.jar` beside the network directory, or set `EvalFile` to the absolute path of the NNUE network.
+command as a normal UCI chess GUI would.
 
 ---
 
 ## Supported UCI Interface
 
-KingFischer2 implements the standard UCI command names and response formats.
+KingFischer2 implements standard UCI command names and response formats.
 
 Supported commands include:
 
@@ -206,17 +325,17 @@ debug
 position startpos
 ~~~
 
-or all six FEN fields.
+or a complete FEN position.
 
-An optional legal coordinate-move list may follow.
+An optional coordinate-move list may follow.
 
-For example:
+Example:
 
 ~~~text
 position startpos moves e2e4 e7e5 g1f3 b8c6
 ~~~
 
-Promotions use suffixes such as:
+Promotions use standard UCI suffixes:
 
 ~~~text
 e7e8q
@@ -248,7 +367,7 @@ Supported search limits include:
 - `mate`
 - `searchmoves`
 
-Examples:
+For example:
 
 ~~~text
 go depth 10
@@ -290,9 +409,9 @@ Unsupported options are not advertised as working.
 
 ## Development Commands
 
-KingFischer2 also includes several commands intended for development and testing.
+KingFischer2 includes several additional commands for development and testing.
 
-### Evaluate Position
+### Evaluate the current position
 
 ~~~text
 eval
@@ -330,17 +449,19 @@ go perft N
 bench [depth]
 ~~~
 
-Perft, divide, and benchmark commands are synchronous developer operations. Use reasonable depths.
+Perft, divide, and benchmark commands are synchronous developer operations.
 
-UCI `stop` applies to ordinary asynchronous `go` searches and not to these synchronous diagnostics.
+Use reasonable depths.
+
+UCI `stop` applies to ordinary asynchronous `go` searches and not to these synchronous diagnostic commands.
 
 ---
 
 ## Verification
 
-KingFischer2 includes an extensive automated regression and validation suite.
+KingFischer2 includes an automated regression and validation suite.
 
-### JUnit
+### JUnit Tests
 
 **29 JUnit tests**, including:
 
@@ -391,9 +512,15 @@ Executable protocol tests include:
 - Malformed input recovery
 - `quit`
 
-See [VALIDATION.md](docs/VALIDATION.md) for detailed validation results, measured timings, machine-readable results, and the exact FEN corpus.
+See:
 
-These tests provide a regression baseline. They are **not** an Elo measurement or a proof of correctness for every possible chess position.
+[VALIDATION.md](docs/VALIDATION.md)
+
+for detailed validation results, measured timings, machine-readable results, and the exact FEN corpus.
+
+These tests provide a regression baseline.
+
+They are **not** an Elo measurement or a proof of correctness for every possible chess position.
 
 ---
 
@@ -438,8 +565,8 @@ KingFischer2:
 - Performs its own search.
 - Runs its NNUE evaluation from Java.
 - Does **not** invoke the Stockfish executable at runtime.
-- Does **not** contain a hidden native chess engine.
-- Does **not** require a platform-specific native engine library.
+- Does **not** contain a hidden native Stockfish engine.
+- Does **not** require Stockfish to be installed to search positions.
 
 It should not be interpreted as an official Stockfish release.
 
@@ -453,7 +580,8 @@ It should not be interpreted as an official Stockfish release.
 **Minimum Java version:** Java 17  
 **Build system:** Maven  
 **Primary interface:** UCI  
-**IDE support:** NetBeans / standard Maven-compatible IDEs  
+**Primary IDE:** NetBeans  
+**Windows executable:** `run_chess_engine.exe`  
 **Project owner/requester:** George Miller  
 
 Java implementation and integration were prepared with AI assistance.
@@ -470,7 +598,7 @@ See:
 - [`NOTICE.md`](NOTICE.md)
 - [`STOCKFISH-AUTHORS`](STOCKFISH-AUTHORS)
 
-The complete source code corresponding to the supplied Java executable is included under:
+The complete Java source code is included under:
 
 ~~~text
 src/main/java/
@@ -484,9 +612,25 @@ networks/
 
 ---
 
+## Platform Support
+
+| Platform | Current Support |
+| --- | --- |
+| **Windows 64-bit** | Prebuilt `run_chess_engine.exe` provided |
+| **Windows + NetBeans** | Full source project supported |
+| **Linux** | Compile Java source yourself |
+| **macOS** | Compile Java source yourself |
+| **Other Java platforms** | May work when compiled with Java 17+, but are not currently packaged or tested |
+
+The repository is primarily intended as a **NetBeans-oriented Java project**.
+
+Users on platforms other than Windows should import or compile the Maven source project using a suitable Java development environment.
+
+---
+
 ## Future Development
 
-Planned development can include:
+Possible future development includes:
 
 - JavaFX chess GUI
 - Multi-threaded search
@@ -500,4 +644,4 @@ Planned development can include:
 - GUI engine configuration
 - Automated regression tournaments
 
-A future JavaFX GUI can launch KingFischer2 and communicate with it over **UCI**, keeping the chess engine, search, and NNUE implementation independent from the graphical interface.
+A future JavaFX GUI can communicate with KingFischer2 over **UCI**, keeping the chess engine, search, and NNUE implementation independent from the graphical interface.
