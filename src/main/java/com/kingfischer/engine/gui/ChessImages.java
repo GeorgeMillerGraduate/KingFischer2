@@ -31,11 +31,11 @@ public final class ChessImages {
             "", "Pawn", "Knight", "Bish", "Rook", "Queen", "King"
         };
 
-        String modernName =
-                (white ? "white_" : "black_") + names[type] + ".png";
+        String modernName
+                = (white ? "white_" : "black_") + names[type] + ".png";
 
-        String originalName =
-                originalNames[type] + (white ? "W" : "B") + ".png";
+        String originalName
+                = originalNames[type] + (white ? "W" : "B") + ".png";
 
         String[] folders = {
             "/com/kingfischer/engine/pieces/",
@@ -50,8 +50,8 @@ public final class ChessImages {
 
         for (String folder : folders) {
             for (String filename : filenames) {
-                try (InputStream input =
-                        ChessImages.class.getResourceAsStream(folder + filename)) {
+                try (InputStream input
+                        = ChessImages.class.getResourceAsStream(folder + filename)) {
 
                     if (input == null) {
                         continue;

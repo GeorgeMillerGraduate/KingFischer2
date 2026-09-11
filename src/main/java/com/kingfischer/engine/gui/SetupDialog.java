@@ -18,6 +18,10 @@ public final class SetupDialog {
     }
 
     public static Parent content(Settings initial, Consumer<Settings> start, Runnable cancel) {
+        return content(initial, start, cancel, null);
+    }
+
+    public static Parent content(Settings initial, Consumer<Settings> start, Runnable cancel, Runnable puzzles) {
         HBox root = new HBox();
         root.getStyleClass().add("welcome");
         StackPane hero = new StackPane();
@@ -49,8 +53,8 @@ public final class SetupDialog {
                 = new VBox(
                         14,
                         Ui.label("K I N G F I S C H E R", "hero-title"),
-                        Ui.label("Java based chess engine", "hero-title"),
-                        Ui.label("Choose your side and start a game.", "hero-copy"));
+                        Ui.label("Java based chess engine", "hero-copy"),
+                        Ui.label("Play a game or practise chess puzzles.", "hero-copy"));
         words.setPadding(new Insets(38));
         words.setMouseTransparent(true);
         words.setAlignment(Pos.TOP_LEFT);
@@ -139,6 +143,12 @@ public final class SetupDialog {
         play.setDefaultButton(true);
         play.setMaxWidth(Double.MAX_VALUE);
         form.getChildren().add(play);
+        if (puzzles != null) {
+            Button puzzleButton = Ui.button("Chess puzzles  →", "secondary", puzzles);
+            puzzleButton.setId("open-puzzles");
+            puzzleButton.setMaxWidth(Double.MAX_VALUE);
+            form.getChildren().add(puzzleButton);
+        }
         if (cancel != null) {
             Button back = Ui.button("Back to game", "text-button", cancel);
             back.setMaxWidth(Double.MAX_VALUE);
