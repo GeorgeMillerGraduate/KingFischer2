@@ -1,0 +1,15 @@
+{
+  "handshake": "passed",
+  "ready_during_search_ms": 0,
+  "stop_response_ms": 4,
+  "depth_7_legal_pvs": "passed",
+  "multipv": "passed",
+  "searchmoves": "passed",
+  "tiny_node_limit": "passed",
+  "movetime_150_actual_ms": 143,
+  "ponderhit": "passed",
+  "infinite_waits_for_stop": "passed",
+  "position_moves": "passed",
+  "malformed_input_recovery": "passed",
+  "quit_during_search": "passed"
+}

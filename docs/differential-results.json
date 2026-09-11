@@ -1,0 +1,10 @@
+{
+  "positions": 2000,
+  "legal_move_sets": 2000,
+  "perft_depth_2": 2000,
+  "nnue_raw": 1872,
+  "normalized_eval": 1872,
+  "elapsed_seconds": 4.35,
+  "seed": 20260911,
+  "reference_commit": "59aae690f91d6f69aac194f447d84b4a2c3be778"
+}
