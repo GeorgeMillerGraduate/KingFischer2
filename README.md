@@ -1,24 +1,52 @@
-# KingFischer2 0.1.0
+# KingFischer2 0.2.0
 
-A Java 17 UCI chess engine written in Java and packaged as a NetBeans-oriented Maven project.
+KingFischer2 is a Java 17 chess engine, graphical chess application, and puzzle trainer packaged as a NetBeans-oriented Maven project.
+
+The project contains its own Java chess engine, a graphical chess board, human-vs-engine play, and a chess puzzle system using the Lichess open puzzle database.
 
 KingFischer2 searches its own moves and does not invoke Stockfish at runtime.
 
-> **Release status:** A working first engine release, with a scalar port of the current Stockfish NNUE evaluator and an adapted selective search.
+> **Release status:** KingFischer2 is an actively developed chess project featuring a working Java chess engine, NNUE evaluation, selective search, a graphical chess interface, and Lichess puzzle support.
 >
 > It is **not a complete Stockfish port**, and does not promise identical best moves, depth, speed, Elo, or support for every Stockfish option.
 >
-> See [Implementation Status](docs/PORT-STATUS.md) for further details.
+> See [Implementation Status](docs/PORT-STATUS.md) for further technical details.
 
 ---
 
-## Quick Start on Windows
+# Features
+
+KingFischer2 currently includes:
+
+- Java chess engine
+- JavaFX graphical chess interface
+- Human-vs-engine chess
+- Legal move generation
+- Selective alpha-beta search
+- NNUE evaluation
+- UCI protocol support
+- FEN position support
+- Transposition table
+- MultiPV analysis
+- Time and node search limits
+- Perft and divide testing
+- Engine benchmarking
+- Lichess chess puzzle mode
+- Puzzle filtering by rating
+- Puzzle filtering by theme
+- Puzzle progress tracking
+- Windows executable
+- NetBeans/Maven source project
+
+---
+
+# Quick Start on Windows
 
 A prebuilt Windows executable is included:
 
-~~~text
+```text
 run_chess_engine.exe
-~~~
+```
 
 This is the simplest way to start KingFischer2 on Windows.
 
@@ -26,74 +54,248 @@ This is the simplest way to start KingFischer2 on Windows.
 2. Keep the project files and `networks` directory together.
 3. Double-click:
 
-~~~text
+```text
 run_chess_engine.exe
-~~~
+```
 
-A Windows Command Prompt window will open and start the chess engine.
+The application can then launch the KingFischer2 chess environment.
 
-You can also launch it manually from Command Prompt.
-
-Open Command Prompt in the KingFischer2 directory and enter:
-
-~~~bat
-run_chess_engine.exe
-~~~
-
-You can then communicate with the engine using standard UCI commands.
-
-For example:
-
-~~~text
-uci
-isready
-position startpos moves e2e4 e7e5 g1f3
-go depth 6
-~~~
-
-Wait for:
-
-~~~text
-bestmove ...
-~~~
-
-The engine emits standard UCI search information while searching:
-
-~~~text
-info depth ... score ... nodes ... pv ...
-~~~
-
-Move choices and scores depend on the position and search parameters, so this README does not promise a particular move.
+The underlying chess engine can also be operated using standard UCI commands.
 
 ---
 
-## Windows Executable
+# Windows Executable
 
 The supplied Windows executable is:
 
-~~~text
+```text
 run_chess_engine.exe
-~~~
+```
 
-It provides a convenient way to run KingFischer2 from a normal Windows Command Prompt without opening the project in an IDE.
+It is intended for:
 
-The executable is intended for **64-bit Windows**.
+```text
+64-bit Windows
+```
 
-The underlying chess engine itself is written in Java.
+The underlying chess application and chess engine are written in Java.
 
 Keep the supplied `networks` directory with the engine files. It contains the trained NNUE network used by the evaluation system.
 
-The network is approximately **94 MiB**.
+The NNUE network is approximately **94 MiB**.
 
 ---
 
-## Other Operating Systems
+# Graphical Chess Interface
+
+KingFischer2 includes a graphical chess interface built in Java.
+
+The GUI provides a visual chess board and controls around the underlying chess engine.
+
+The graphical application supports normal chess interaction while keeping the chess engine itself separate from the presentation layer.
+
+The GUI code includes components for:
+
+- Chess board display
+- Chess-piece images
+- Move handling
+- Game state
+- Engine-controlled players
+- Board themes
+- Game setup
+- Puzzle setup
+- Puzzle play
+
+The application therefore functions as more than a command-line UCI engine.
+
+---
+
+# Chess Puzzle Mode
+
+KingFischer2 includes a chess puzzle trainer based on the **Lichess open puzzle database**.
+
+The puzzle database contains millions of real chess positions with ratings and tactical themes.
+
+The database itself is **not included in this GitHub repository** because the extracted CSV is over 1 GB and exceeds GitHub's normal individual-file size limit.
+
+## Download the Lichess Puzzle Database
+
+The official Lichess database can be downloaded here:
+
+**https://database.lichess.org/#puzzles**
+
+Locate:
+
+```text
+lichess_db_puzzle.csv.zst
+```
+
+under the **Puzzles** section.
+
+Lichess distributes the database as a compressed Zstandard (`.zst`) file.
+
+Extract it to obtain:
+
+```text
+lichess_db_puzzle.csv
+```
+
+---
+
+# Installing the Puzzle Database
+
+Place the extracted puzzle database in the root KingFischer2 directory.
+
+For example:
+
+```text
+KingFischer2/
+│
+├── lichess_db_puzzle.csv
+├── pom.xml
+├── run_chess_engine.exe
+├── networks/
+├── src/
+├── docs/
+└── ...
+```
+
+The filename should be:
+
+```text
+lichess_db_puzzle.csv
+```
+
+The CSV is deliberately excluded from Git version control because of its size.
+
+Do **not** rename the file unless the puzzle database path in the application is also changed.
+
+---
+
+# Lichess Puzzle Format
+
+The Lichess puzzle database uses CSV records containing fields including:
+
+```text
+PuzzleId
+FEN
+Moves
+Rating
+RatingDeviation
+Popularity
+NbPlays
+Themes
+GameUrl
+OpeningTags
+DailyDate
+```
+
+Puzzle moves are represented using UCI move notation.
+
+The database provides the starting position, solution moves, puzzle rating, tactical themes and other metadata used by the KingFischer2 puzzle system.
+
+---
+
+# Puzzle Filtering
+
+KingFischer2 can select puzzles according to user-defined criteria.
+
+The puzzle setup interface supports filtering by **rating range** and **puzzle theme**.
+
+This allows training sessions such as:
+
+```text
+Rating: 1500–2000
+Theme: Mate in 2
+```
+
+or:
+
+```text
+Rating: 1000–1500
+Theme: Fork
+```
+
+The Lichess database contains a wide range of tactical themes, allowing the puzzle trainer to focus on particular areas of chess.
+
+Examples include:
+
+- Advanced pawn
+- Advantage
+- Attraction
+- Capturing defender
+- Crushing
+- Defensive move
+- Deflection
+- Discovered attack
+- Double check
+- Endgame
+- Equality
+- Exposed king
+- Fork
+- Hanging piece
+- Interference
+- Kingside attack
+- Mate
+- Mate in 1
+- Mate in 2
+- Mate in 3
+- Mate in 4
+- Mate in 5 or more
+- Middlegame
+- Opening
+- Pin
+- Promotion
+- Queenside attack
+- Sacrifice
+- Skewer
+- Trapped piece
+- Underpromotion
+- X-ray attack
+
+The exact available tags are determined by the Lichess puzzle database.
+
+---
+
+# Puzzle Progress
+
+KingFischer2 contains puzzle-session and puzzle-progress functionality.
+
+The puzzle subsystem is separated into dedicated classes responsible for:
+
+- Reading the Lichess CSV
+- Representing individual puzzles
+- Filtering puzzles
+- Selecting puzzles
+- Managing puzzle sessions
+- Recording puzzle progress
+- Connecting puzzle data to the graphical interface
+
+This keeps the puzzle system separate from the core chess engine.
+
+---
+
+# Lichess Database Licence
+
+The Lichess open database exports are released under the **Creative Commons CC0 licence**.
+
+The puzzle data is therefore downloaded separately from Lichess rather than being bundled into the KingFischer2 repository.
+
+KingFischer2 is not affiliated with or endorsed by Lichess.
+
+The original puzzle database and current download are available from:
+
+**https://database.lichess.org/#puzzles**
+
+---
+
+# Other Operating Systems
 
 A precompiled executable is currently provided **only for Windows**.
 
 There are currently no packaged macOS or Linux executables.
 
-Because the engine itself is written in Java, the source code can be compiled on other platforms using a suitable Java IDE or Maven environment.
+Because KingFischer2 itself is written in Java, the source code can be compiled on other platforms using a suitable Java IDE or Maven environment.
 
 The project is primarily configured and tested using:
 
@@ -107,21 +309,21 @@ Although other Java IDEs should be capable of importing the Maven project, **Net
 
 ---
 
-## Open and Compile in NetBeans
+# Open and Compile in NetBeans
 
 KingFischer2 is primarily designed as a **NetBeans Maven project**.
 
-### Requirements
+## Requirements
 
 - NetBeans
 - JDK 17 or newer
 - Maven, or the Maven installation bundled with NetBeans
 
-### Opening the project
+## Opening the Project
 
 1. Open **NetBeans**.
 2. Select **File → Open Project**.
-3. Select the **`KingFischer2`** directory containing `pom.xml`.
+3. Select the `KingFischer2` directory containing `pom.xml`.
 4. Set the project Java platform to **JDK 17 or newer**.
 5. Select **Clean and Build**.
 6. Select **Run Project**.
@@ -130,9 +332,9 @@ The supplied `nbactions.xml` configures the project for NetBeans.
 
 Because this is a Maven project, NetBeans recognises the project through:
 
-~~~text
+```text
 pom.xml
-~~~
+```
 
 An old-style Ant `nbproject` directory is not required.
 
@@ -140,169 +342,184 @@ Dependencies required for building and testing are downloaded by Maven.
 
 ---
 
-## Compile from Source
+# Compile from Source
 
 The project can also be compiled directly with Maven if Java and Maven are installed.
 
 From the KingFischer2 project directory:
 
-~~~bash
+```bash
 mvn clean verify
-~~~
+```
 
 The compiled JAR will be created under:
 
-~~~text
+```text
 target/
-~~~
+```
 
 The engine can then be run using Java.
 
 For example:
 
-~~~bash
+```bash
 java -Xmx768m -jar target/KingFischer2.jar
-~~~
+```
 
-Run the engine from the project directory so that the NNUE network can be located.
+Run the engine from the project directory so that required external resources, including the NNUE network, can be located.
 
 The exact JAR filename is determined by the Maven configuration in `pom.xml`.
 
-The Windows `run_chess_engine.exe` is provided for convenience; the Java source remains the underlying implementation.
+---
+
+# UCI Engine
+
+KingFischer2 implements the **Universal Chess Interface (UCI)** protocol.
+
+This allows the underlying engine to be controlled independently of the graphical interface.
+
+For example:
+
+```text
+uci
+isready
+position startpos moves e2e4 e7e5 g1f3
+go depth 6
+```
+
+Wait for:
+
+```text
+bestmove ...
+```
+
+The engine emits standard UCI search information while searching:
+
+```text
+info depth ... score ... nodes ... pv ...
+```
+
+Move choices and scores depend on the position and search parameters, so this README does not promise a particular move.
 
 ---
 
-## Basic UCI Usage
+# Basic UCI Usage
 
-KingFischer2 uses the **Universal Chess Interface (UCI)** protocol.
+## Initialise UCI
 
-After starting:
-
-~~~text
-run_chess_engine.exe
-~~~
-
-enter commands one line at a time.
-
-### Initialise UCI
-
-~~~text
+```text
 uci
-~~~
+```
 
-The engine should eventually respond with:
+The engine should eventually respond:
 
-~~~text
+```text
 uciok
-~~~
+```
 
-### Check readiness
+## Check Readiness
 
-~~~text
+```text
 isready
-~~~
+```
 
-The engine responds:
+Response:
 
-~~~text
+```text
 readyok
-~~~
+```
 
-### Set a position
+## Set a Position
 
-For the starting position:
+Starting position:
 
-~~~text
+```text
 position startpos
-~~~
+```
 
 With moves:
 
-~~~text
+```text
 position startpos moves e2e4 e7e5 g1f3
-~~~
+```
 
-### Start a search
+## Start a Search
 
-For a fixed depth:
-
-~~~text
+```text
 go depth 6
-~~~
+```
 
-The engine searches the position and eventually returns:
+The engine eventually returns:
 
-~~~text
+```text
 bestmove ...
-~~~
+```
 
 ---
 
-## Search Examples
+# Search Examples
 
-### Search to depth 10
+## Search to Depth 10
 
-~~~text
+```text
 go depth 10
-~~~
+```
 
-### Search 100,000 nodes
+## Search 100,000 Nodes
 
-~~~text
+```text
 go nodes 100000
-~~~
+```
 
-### Think for one second
+## Think for One Second
 
-~~~text
+```text
 go movetime 1000
-~~~
+```
 
-### Think for five seconds
+## Think for Five Seconds
 
-~~~text
+```text
 go movetime 5000
-~~~
+```
 
-### Continuous analysis
+## Continuous Analysis
 
-~~~text
+```text
 go infinite
-~~~
+```
 
 Stop continuous analysis with:
 
-~~~text
+```text
 stop
-~~~
+```
 
-Exit KingFischer2 with:
+Exit the engine with:
 
-~~~text
+```text
 quit
-~~~
+```
 
 The first search loads the NNUE network. Subsequent searches reuse it.
 
-A successful `bestmove` does **not** automatically update the game position.
+A successful `bestmove` does **not** automatically update the UCI game position.
 
 Send the next complete:
 
-~~~text
+```text
 position ... moves ...
-~~~
+```
 
 command as a normal UCI chess GUI would.
 
 ---
 
-## Supported UCI Interface
-
-KingFischer2 implements standard UCI command names and response formats.
+# Supported UCI Interface
 
 Supported commands include:
 
-~~~text
+```text
 uci
 uciok
 isready
@@ -317,13 +534,13 @@ quit
 info
 bestmove
 debug
-~~~
+```
 
 `position` accepts either:
 
-~~~text
+```text
 position startpos
-~~~
+```
 
 or a complete FEN position.
 
@@ -331,26 +548,26 @@ An optional coordinate-move list may follow.
 
 Example:
 
-~~~text
+```text
 position startpos moves e2e4 e7e5 g1f3 b8c6
-~~~
+```
 
 Promotions use standard UCI suffixes:
 
-~~~text
+```text
 e7e8q
-~~~
+```
 
 Orthodox castling uses:
 
-~~~text
+```text
 e1g1
 e1c1
-~~~
+```
 
 ---
 
-## Search Limits
+# Search Limits
 
 Supported search limits include:
 
@@ -367,14 +584,14 @@ Supported search limits include:
 - `mate`
 - `searchmoves`
 
-For example:
+Examples:
 
-~~~text
+```text
 go depth 10
 go nodes 100000
 go movetime 5000
 go infinite
-~~~
+```
 
 `mate N` caps the depth at `2N` and searches for a mate within that limit.
 
@@ -382,7 +599,7 @@ Because KingFischer2 uses a selective search, failure to find a mate does not co
 
 ---
 
-## UCI Options
+# UCI Options
 
 | Option | Supported Setting |
 | --- | --- |
@@ -399,57 +616,57 @@ Because KingFischer2 uses a selective search, failure to find a mate does not co
 
 Unsupported options produce:
 
-~~~text
+```text
 info string Error: Unsupported option ...
-~~~
+```
 
 Unsupported options are not advertised as working.
 
 ---
 
-## Development Commands
+# Development Commands
 
 KingFischer2 includes several additional commands for development and testing.
 
-### Evaluate the current position
+## Evaluate the Current Position
 
-~~~text
+```text
 eval
-~~~
+```
 
 Displays the raw NNUE and scaled evaluation.
 
-### Display FEN
+## Display FEN
 
-~~~text
+```text
 d
-~~~
+```
 
-### Perft
+## Perft
 
-~~~text
+```text
 perft N
-~~~
+```
 
-### Divide
+## Divide
 
-~~~text
+```text
 divide N
-~~~
+```
 
-### UCI-style Perft
+## UCI-Style Perft
 
-~~~text
+```text
 go perft N
-~~~
+```
 
-### Benchmark
+## Benchmark
 
-~~~text
+```text
 bench [depth]
-~~~
+```
 
-Perft, divide, and benchmark commands are synchronous developer operations.
+Perft, divide and benchmark commands are synchronous developer operations.
 
 Use reasonable depths.
 
@@ -457,13 +674,13 @@ UCI `stop` applies to ordinary asynchronous `go` searches and not to these synch
 
 ---
 
-## Verification
+# Verification
 
 KingFischer2 includes an automated regression and validation suite.
 
-### JUnit Tests
+## JUnit Tests
 
-**29 JUnit tests**, including:
+The existing validation suite includes **29 JUnit tests**, covering areas such as:
 
 - Starting-position perft through depth 6
 - **119,060,324 nodes** at starting-position depth 6
@@ -478,7 +695,7 @@ KingFischer2 includes an automated regression and validation suite.
 - NNUE incremental updates
 - Search node limits
 
-### Move Generation
+## Move Generation
 
 **2,000 deterministic positions** were compared against the reference Stockfish executable.
 
@@ -488,7 +705,7 @@ For these positions:
 - Perft depth 2 matched Stockfish.
 - Legal move sets also matched `python-chess`.
 
-### NNUE Evaluation
+## NNUE Evaluation
 
 For **1,872 non-check positions**:
 
@@ -497,7 +714,7 @@ For **1,872 non-check positions**:
 
 Positions in check are excluded from this evaluation comparison because Stockfish's `eval` command declines to evaluate them.
 
-### UCI Protocol
+## UCI Protocol
 
 Executable protocol tests include:
 
@@ -516,15 +733,15 @@ See:
 
 [VALIDATION.md](docs/VALIDATION.md)
 
-for detailed validation results, measured timings, machine-readable results, and the exact FEN corpus.
+for detailed validation results, measured timings, machine-readable results and the exact FEN corpus.
 
 These tests provide a regression baseline.
 
-They are **not** an Elo measurement or a proof of correctness for every possible chess position.
+They are **not** an Elo measurement or proof of correctness for every possible chess position.
 
 ---
 
-## Stockfish Reference
+# Stockfish Reference
 
 KingFischer2 uses Stockfish as an algorithmic and validation reference.
 
@@ -534,25 +751,25 @@ https://github.com/official-stockfish/Stockfish
 
 Reference commit:
 
-~~~text
+```text
 59aae690f91d6f69aac194f447d84b4a2c3be778
-~~~
+```
 
 Development build dated:
 
-~~~text
+```text
 2026-09-09
-~~~
+```
 
 Reference retrieved:
 
-~~~text
+```text
 2026-09-11
-~~~
+```
 
 ---
 
-## Relationship to Stockfish
+# Relationship to Stockfish
 
 KingFischer2 is an **unofficial Java derivative/reimplementation**.
 
@@ -572,23 +789,89 @@ It should not be interpreted as an official Stockfish release.
 
 ---
 
-## Project Information
+# Project Structure
+
+The main Java source is located under:
+
+```text
+src/main/java/
+```
+
+The project contains separate packages/classes for the core chess engine, graphical interface and puzzle subsystem.
+
+The puzzle subsystem includes components such as:
+
+```text
+Puzzle.java
+PuzzleCsvReader.java
+PuzzleFilter.java
+PuzzleProgressStore.java
+PuzzleRepository.java
+PuzzleSession.java
+```
+
+The GUI includes puzzle-specific views including:
+
+```text
+PuzzleSetupView.java
+PuzzleView.java
+```
+
+This separation allows puzzle functionality to use the chess model without being built directly into the engine's search implementation.
+
+---
+
+# External Data and Resources
+
+KingFischer2 uses two significant external resources.
+
+## NNUE Network
+
+Located under:
+
+```text
+networks/
+```
+
+This is required by the NNUE evaluation system.
+
+## Lichess Puzzle Database
+
+Downloaded separately from:
+
+**https://database.lichess.org/#puzzles**
+
+Extract and place:
+
+```text
+lichess_db_puzzle.csv
+```
+
+in the KingFischer2 project directory.
+
+The puzzle database is intentionally excluded from the Git repository because of its size.
+
+---
+
+# Project Information
 
 **Project:** KingFischer2  
-**Version:** 0.1.0  
+**Version:** 0.2.0  
 **Language:** Java  
 **Minimum Java version:** Java 17  
 **Build system:** Maven  
-**Primary interface:** UCI  
+**Chess engine interface:** UCI  
+**Graphical interface:** Java GUI  
 **Primary IDE:** NetBeans  
 **Windows executable:** `run_chess_engine.exe`  
+**Puzzle source:** Lichess Open Database  
 **Project owner/requester:** George Miller  
 
 Java implementation and integration were prepared with AI assistance.
 
 ---
 
-## Licence
+# Licence
 
 KingFischer2 is distributed under the **GNU General Public License version 3 or later (GPLv3+)**.
 
@@ -600,19 +883,23 @@ See:
 
 The complete Java source code is included under:
 
-~~~text
+```text
 src/main/java/
-~~~
+```
 
 The NNUE network required by the supplied engine is included under:
 
-~~~text
+```text
 networks/
-~~~
+```
+
+The Lichess puzzle database is **not included** in this repository and must be downloaded separately.
+
+Lichess database exports are released under CC0.
 
 ---
 
-## Platform Support
+# Platform Support
 
 | Platform | Current Support |
 | --- | --- |
@@ -628,20 +915,60 @@ Users on platforms other than Windows should import or compile the Maven source 
 
 ---
 
-## Future Development
+# Future Development
 
 Possible future development includes:
 
-- JavaFX chess GUI
+- Network human-vs-human chess
+- Engine-vs-engine matches
+- Direct testing against external UCI engines
+- Self-play
 - Multi-threaded search
 - Search performance optimisation
 - Additional Stockfish search heuristics
 - Improved time management
-- Engine-vs-engine testing
 - Elo benchmarking
 - Additional UCI options
-- Analysis mode
-- GUI engine configuration
+- Expanded analysis tools
+- Improved GUI engine configuration
+- Puzzle statistics and training history
+- Additional puzzle filtering
 - Automated regression tournaments
 
-A future JavaFX GUI can communicate with KingFischer2 over **UCI**, keeping the chess engine, search, and NNUE implementation independent from the graphical interface.
+---
+
+# Credits
+
+KingFischer2 makes use of ideas, algorithms and/or data from major open chess projects.
+
+Special acknowledgement is given to:
+
+- **Stockfish developers** — engine algorithms, NNUE reference implementation and validation reference.
+- **Lichess** — open chess puzzle database.
+- **python-chess** — additional move-generation validation during development.
+
+KingFischer2 is an independent project and is not an official release of Stockfish or Lichess.
+
+---
+
+# Puzzle Database Download
+
+To enable the complete KingFischer2 puzzle trainer, download the official Lichess puzzle database:
+
+**https://database.lichess.org/#puzzles**
+
+Download:
+
+```text
+lichess_db_puzzle.csv.zst
+```
+
+Extract it and place:
+
+```text
+lichess_db_puzzle.csv
+```
+
+in the KingFischer2 project directory.
+
+The puzzle database is intentionally kept outside the GitHub repository because the extracted database is over 1 GB.
